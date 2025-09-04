@@ -1,0 +1,49 @@
+ 
+
+# Node modules
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build output
+/dist
+/build
+/client/build
+/server/build
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+
+# Environment files
+.env
+.env.*.local
+
+# Cache
+.cache/
+.parcel-cache/
+
+# Model binaries and large assets
+client/public/models/
+
+# Misc
+.eslintcache
+
