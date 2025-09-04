@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import FaceRegister from "./FaceRegister";
 import FaceVerify from "./FaceVerify";
+import LandingPage from "./LandingPage";
+import ThankYou from "./ThankYou";
 import "./App.css";
 import axios from "axios";
 
@@ -124,15 +126,84 @@ function Login({ onLoggedIn }) {
 function App() {
   const [user, setUser] = useState(null);
   const [showRegister, setShowRegister] = useState(false);
+  const [showLanding, setShowLanding] = useState(true);
+  const [showThankYou, setShowThankYou] = useState(false);
+  const [votedCandidate, setVotedCandidate] = useState(null);
+
+  const handleGetStarted = () => {
+    setShowLanding(false);
+  };
+
+  const handleBackToLanding = () => {
+    setShowLanding(true);
+    setUser(null);
+    setShowRegister(false);
+    setShowThankYou(false);
+    setVotedCandidate(null);
+  };
+
+  const handleVoteCast = (candidate) => {
+    setVotedCandidate(candidate);
+    setShowThankYou(true);
+  };
+
+  const handleViewResults = () => {
+    // For now, just go back to landing page
+    // In a real app, this would navigate to a results page
+    handleBackToLanding();
+  };
+
+  if (showThankYou) {
+    return (
+      <div className="votenova-app">
+        <header className="vn-header">
+          <div className="vn-logo" onClick={handleBackToLanding} style={{ cursor: 'pointer' }}>VN</div>
+          <div className="vn-title-group">
+            <h1 className="vn-title">VoteNova</h1>
+            <p className="vn-subtitle">Secure. Seamless. Face‑verified voting.</p>
+          </div>
+        </header>
+        <ThankYou
+          candidate={votedCandidate}
+          onBackToHome={handleBackToLanding}
+          onViewResults={handleViewResults}
+        />
+        <footer className="vn-footer">© {new Date().getFullYear()} VoteNova</footer>
+      </div>
+    );
+  }
+
+  if (showLanding) {
+    return (
+      <div className="votenova-app">
+        <header className="vn-header">
+          <div className="vn-logo">VN</div>
+          <div className="vn-title-group">
+            <h1 className="vn-title">VoteNova</h1>
+            <p className="vn-subtitle">Secure. Seamless. Face‑verified voting.</p>
+          </div>
+        </header>
+        <LandingPage onGetStarted={handleGetStarted} />
+        <footer className="vn-footer">© {new Date().getFullYear()} VoteNova</footer>
+      </div>
+    );
+  }
 
   return (
     <div className="votenova-app">
       <header className="vn-header">
-        <div className="vn-logo">VN</div>
+        <div className="vn-logo" onClick={handleBackToLanding} style={{ cursor: 'pointer' }}>VN</div>
         <div className="vn-title-group">
           <h1 className="vn-title">VoteNova</h1>
           <p className="vn-subtitle">Secure. Seamless. Face‑verified voting.</p>
         </div>
+        <button
+          className="vn-btn secondary"
+          onClick={handleBackToLanding}
+          style={{ marginLeft: 'auto', padding: '0.5rem 1rem', fontSize: '0.9rem' }}
+        >
+          ← Back to Home
+        </button>
       </header>
 
       <main className="vn-main">
@@ -165,7 +236,7 @@ function App() {
               <div className="vn-chip">Signed in as {user.name || user.email}</div>
               <h2 className="vn-card-title">Verify & Vote</h2>
               <p className="vn-card-desc">Verify your identity and cast your vote.</p>
-              <FaceVerify />
+              <FaceVerify onVoteCast={handleVoteCast} />
             </div>
           </section>
         )}

@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as faceapi from 'face-api.js';
 import axios from 'axios';
 
-function FaceVerify() {
+function FaceVerify({ onVoteCast }) {
   const videoRef = useRef();
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [email, setEmail] = useState('');
@@ -209,6 +209,14 @@ function FaceVerify() {
         candidate
       });
       setVoteStatus(`Vote for "${candidate}" recorded!`);
+
+      // Redirect to thank you page after successful vote
+      setTimeout(() => {
+        if (onVoteCast) {
+          onVoteCast(candidate);
+        }
+      }, 1500); // Brief delay to show success message
+
     } catch (err) {
       setVoteStatus(err.response?.data?.error || 'Vote failed');
     }
